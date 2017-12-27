@@ -18,10 +18,10 @@ namespace ExceleApplication
 
         public void ReadExistingExcel(List<ExcellData> data,string currency,string day,string month,string year)
         {
-            string path = @"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\İSO-DER-SM-MEMUR (mdm) 17.11.Ay.xls";
+            string path = @"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\MemurTemp.xls";
             excel = new Microsoft.Office.Interop.Excel.Application
             {
-                Visible = true,
+                Visible = false,
                 DisplayAlerts = false
             };
             workBook = excel.Workbooks.Open(path, 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
@@ -34,6 +34,8 @@ namespace ExceleApplication
 
             worksheet.Cells[7, 3] = month;
             worksheet.Cells[8, 4] =currency;
+            worksheet.Cells[4, 3] = string.Concat(day,"/",month,"/",year);
+
             //worksheet.Cells[5, 4] = totalAmount;
             //worksheet.Cells[6, 4] = data.Count;
             int rowBeginning = 10;
@@ -51,15 +53,11 @@ namespace ExceleApplication
                     worksheet.Cells[rowBeginning, 5] = item.Iban;
                 }
             }
-
+            year = year.Substring(2,2);
 
             string name = string.Concat("İSO-DER-SM-MEMUR (mdm) ", day,".", month,".", year, ".xls");
             string destinatonPath = string.Concat(@"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\",name);
-
-            workBook.SaveAs(destinatonPath, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal,
-            Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive,
-            Missing.Value, Missing.Value, Missing.Value,
-            Missing.Value, Missing.Value);
+            workBook.SaveCopyAs(destinatonPath);
             workBook.Close(Missing.Value, Missing.Value, Missing.Value);
             worksheet = null;
             workBook = null;
@@ -69,94 +67,6 @@ namespace ExceleApplication
        
         }
 
-        public void CreateNewExcellAndFillFromDataTable()
-        {
-            Microsoft.Office.Interop.Excel.Application excel;
-            Microsoft.Office.Interop.Excel.Workbook worKbooK;
-            Microsoft.Office.Interop.Excel.Worksheet worKsheeT;
-            Microsoft.Office.Interop.Excel.Range celLrangE;
-            try
-            {
-                excel = new Microsoft.Office.Interop.Excel.Application
-                {
-                    Visible = true,
-                    DisplayAlerts = false
-                };
-                worKbooK = excel.Workbooks.Add(Type.Missing);
-
-                worKsheeT = (Microsoft.Office.Interop.Excel.Worksheet)worKbooK.ActiveSheet;
-                worKsheeT.Name = "StudentRepoertCard";
-
-                worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[1, 8]].Merge();
-                worKsheeT.Cells[1, 1] = "Student Report Card";
-                worKsheeT.Cells.Font.Size = 15;
-
-
-                int rowcount = 2;
-
-                foreach (DataRow datarow in GetData().Rows)
-                {
-                    rowcount += 1;
-                    for (int i = 1; i <= GetData().Columns.Count; i++)
-                    {
-
-                        if (rowcount == 3)
-                        {
-                            worKsheeT.Cells[2, i] = GetData().Columns[i - 1].ColumnName;
-                            worKsheeT.Cells.Font.Color = ConsoleColor.Black;
-
-                        }
-
-                        worKsheeT.Cells[rowcount, i] = datarow[i - 1].ToString();
-
-                        if (rowcount > 3)
-                        {
-                            if (i == GetData().Columns.Count)
-                            {
-                                if (rowcount % 2 == 0)
-                                {
-                                    celLrangE = worKsheeT.Range[worKsheeT.Cells[rowcount, 1], worKsheeT.Cells[rowcount, GetData().Columns.Count]];
-                                }
-
-                            }
-                        }
-
-                    }
-
-                }
-
-                celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[rowcount, GetData().Columns.Count]];
-                celLrangE.EntireColumn.AutoFit();
-                Microsoft.Office.Interop.Excel.Borders border = celLrangE.Borders;
-                border.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
-                border.Weight = 2d;
-
-                celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[2, GetData().Columns.Count]];
-
-                worKbooK.SaveAs(@"D:\Users\udagasan\Desktop\A");
-                //var a = File.CreateText(@"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources");
-                worKbooK.Close();
-                excel.Quit();
-
-            }
-            catch (Exception ex)
-            {
-                Debug.Write(ex.Message);
-                throw new Exception(ex.Message);
-
-            }
-            finally
-            {
-                worKsheeT = null;
-                celLrangE = null;
-                worKbooK = null;
-            }
-        }
-
-        private DataTable GetData()
-        {
-            throw new NotImplementedException();
-        }
     }
 
 
