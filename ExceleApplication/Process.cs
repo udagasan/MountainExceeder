@@ -16,7 +16,7 @@ namespace ExceleApplication
         private static Microsoft.Office.Interop.Excel.Application excel;
 
 
-        public void ReadExistingExcel(List<ExcellData> data,string currency,string day,string month,string year,string totalAmount)
+        public void ReadExistingExcel(List<ExcellData> data,string currency,string day,string month,string year)
         {
             string path = @"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\İSO-DER-SM-MEMUR (mdm) 17.11.Ay.xls";
             excel = new Microsoft.Office.Interop.Excel.Application
