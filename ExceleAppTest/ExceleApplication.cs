@@ -24,7 +24,7 @@ namespace ExceleAppTest
             var day = DateTime.Now.Day.ToString();
             var month = DateTime.Now.Month.ToString();
             var year = DateTime.Now.Year.ToString().Substring(2, 2);
-            obj.ReadExistingExcel(GetTestDataList(),"USD",day, month, year);
+            obj.ReadExistingExcel(GetTestDataList(),"USD",day, month, year,"1000");
 
 
         }

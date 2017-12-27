@@ -16,7 +16,7 @@ namespace ExceleApplication
         private static Microsoft.Office.Interop.Excel.Application excel;
 
 
-        public void ReadExistingExcel(List<ExcellData> data,string currency,string day,string month,string year)
+        public void ReadExistingExcel(List<ExcellData> data,string currency,string day,string month,string year,string totalAmount)
         {
             string path = @"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\İSO-DER-SM-MEMUR (mdm) 17.11.Ay.xls";
             excel = new Microsoft.Office.Interop.Excel.Application
@@ -31,6 +31,11 @@ namespace ExceleApplication
             int colCount = range.Columns.Count;
             int rowCount = range.Rows.Count;
 
+
+            worksheet.Cells[7, 3] = month;
+            worksheet.Cells[8, 4] =currency;
+            //worksheet.Cells[5, 4] = totalAmount;
+            //worksheet.Cells[6, 4] = data.Count;
             int rowBeginning = 10;
 
             foreach (var item in data)
