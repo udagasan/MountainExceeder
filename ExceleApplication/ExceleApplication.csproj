@@ -43,5 +43,10 @@
     <Compile Include="Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Sources\İSO-DER-SM-MEMUR %28mdm%29 17.11.Ay.xls" />
+    <None Include="Sources\İSO-DER-SM-İŞÇİ - %28mdm%2917.11.Ay.xls" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
