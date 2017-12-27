@@ -21,7 +21,10 @@ namespace ExceleAppTest
         public void ReadExistingExcel()
         {
             var obj = new Process();
-            obj.ReadExistingExcel(GetTestDataList());
+            var day = DateTime.Now.Day.ToString();
+            var month = DateTime.Now.Month.ToString();
+            var year = DateTime.Now.Year.ToString().Substring(2, 2);
+            obj.ReadExistingExcel(GetTestDataList(),"USD",day, month, year);
 
 
         }
@@ -36,7 +39,6 @@ namespace ExceleAppTest
                 AccountNumber = "90390737",
                 RegisterNumber = "8902",
                 Iban = "işjsişodfjşso9ıerı*ewqrı",
-                Currenc = "USD",
                 Amount="20"
             },
                 new ExcellData
@@ -46,7 +48,6 @@ namespace ExceleAppTest
                 RegisterNumber = "8902",
                 Amount="20",
                 Iban = "işjsişodfjşso9ıerı*ewqrı",
-                Currenc = "USD"
             },
             new ExcellData
             {
@@ -55,7 +56,6 @@ namespace ExceleAppTest
                 AccountNumber = "90390737",
                 RegisterNumber = "8902",
                 Iban = "işjsişodfjşso9ıerı*ewqrı",
-                Currenc = "USD"
             }
         };
 

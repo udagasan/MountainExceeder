@@ -10,22 +10,24 @@ namespace ExceleApplication
 {
     public class Process
     {
-        private static Microsoft.Office.Interop.Excel.Workbook mWorkBook;
-        private static Microsoft.Office.Interop.Excel.Sheets mWorkSheets;
-        private static Microsoft.Office.Interop.Excel.Worksheet mWSheet1;
-        private static Microsoft.Office.Interop.Excel.Application oXL;
+        private static Microsoft.Office.Interop.Excel.Workbook workBook;
+        private static Microsoft.Office.Interop.Excel.Sheets workSheets;
+        private static Microsoft.Office.Interop.Excel.Worksheet worksheet;
+        private static Microsoft.Office.Interop.Excel.Application excel;
 
 
-        public void ReadExistingExcel(List<ExcellData> data)
+        public void ReadExistingExcel(List<ExcellData> data,string currency,string day,string month,string year)
         {
             string path = @"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\İSO-DER-SM-MEMUR (mdm) 17.11.Ay.xls";
-            oXL = new Microsoft.Office.Interop.Excel.Application();
-            oXL.Visible = true;
-            oXL.DisplayAlerts = false;
-            mWorkBook = oXL.Workbooks.Open(path, 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
-            mWorkSheets = mWorkBook.Worksheets;
-            mWSheet1 = (Microsoft.Office.Interop.Excel.Worksheet)mWorkSheets.get_Item("kurummaas");
-            Microsoft.Office.Interop.Excel.Range range = mWSheet1.UsedRange;
+            excel = new Microsoft.Office.Interop.Excel.Application
+            {
+                Visible = true,
+                DisplayAlerts = false
+            };
+            workBook = excel.Workbooks.Open(path, 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
+            workSheets = workBook.Worksheets;
+            worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workSheets.get_Item("kurummaas");
+            Microsoft.Office.Interop.Excel.Range range = worksheet.UsedRange;
             int colCount = range.Columns.Count;
             int rowCount = range.Rows.Count;
 
@@ -37,32 +39,29 @@ namespace ExceleApplication
 
                 for (int index = 1; index < 2; index++)
                 {
-                    mWSheet1.Cells[rowBeginning, 1] = item.FullName;
-                    mWSheet1.Cells[rowBeginning, 2] = item.AccountNumber;
-                    mWSheet1.Cells[rowBeginning, 3] = item.RegisterNumber;
-                    mWSheet1.Cells[rowBeginning, 4] = item.Amount;
-                    mWSheet1.Cells[rowBeginning, 5] = item.Iban;
+                    worksheet.Cells[rowBeginning, 1] = item.FullName;
+                    worksheet.Cells[rowBeginning, 2] = item.AccountNumber;
+                    worksheet.Cells[rowBeginning, 3] = item.RegisterNumber;
+                    worksheet.Cells[rowBeginning, 4] = item.Amount;
+                    worksheet.Cells[rowBeginning, 5] = item.Iban;
                 }
             }
-            var day = DateTime.Now.Day.ToString();
-            var month = DateTime.Now.Month.ToString();
-            var year = DateTime.Now.Year.ToString().Substring(2, 2);
 
-            string name = string.Concat("İSO-DER-SM-MEMUR (mdm) {0}.{1}.{2}.xsl",year,day,month);
+
+            string name = string.Concat("İSO-DER-SM-MEMUR (mdm) ", day,".", month,".", year, ".xls");
             string destinatonPath = string.Concat(@"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\",name);
 
-            mWorkBook.SaveAs(path, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal,
+            workBook.SaveAs(destinatonPath, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal,
             Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive,
             Missing.Value, Missing.Value, Missing.Value,
             Missing.Value, Missing.Value);
-            mWorkBook.Close(Missing.Value, Missing.Value, Missing.Value);
-            mWSheet1 = null;
-            mWorkBook = null;
-            oXL.Quit();
+            workBook.Close(Missing.Value, Missing.Value, Missing.Value);
+            worksheet = null;
+            workBook = null;
+            excel.Quit();
             GC.WaitForPendingFinalizers();
             GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
+       
         }
 
         public void CreateNewExcellAndFillFromDataTable()
@@ -163,7 +162,6 @@ namespace ExceleApplication
         public string AccountNumber;
         public string RegisterNumber;
         public string Amount;
-        public string Currenc;
         public string Iban;
 
     }
