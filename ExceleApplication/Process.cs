@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
+
 using System.Reflection;
-using System.Runtime.InteropServices;
-using Microsoft.Office.Core;
+
 
 namespace ExceleApplication
 {
