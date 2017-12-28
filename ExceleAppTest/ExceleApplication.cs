@@ -16,7 +16,7 @@ namespace ExceleAppTest
             var day = DateTime.Now.Day.ToString();
             var month = DateTime.Now.Month.ToString();
             var year = DateTime.Now.Year.ToString();
-            var destPath = obj.ReadExistingExcel(GetTestDataList(), "USD", day, month, year);
+            var destPath = obj.ReadExistingExcel(GetTestDataList(), "USD", day, month, year,Process.ExcelType.Official);
 
 
         }

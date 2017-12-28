@@ -16,10 +16,15 @@ namespace ExceleApplication
         private static Microsoft.Office.Interop.Excel.Application excel;
 
 
-        public string ReadExistingExcel(List<ExcellData> data, string currency, string day, string month, string year)
+        public string ReadExistingExcel(List<ExcellData> data, string currency, string day, string month, string year,ExcelType excelType)
         {
+            string excelName = "İşçiTemp";
+            if (excelType == ExcelType.Official)
+            {
+                excelName = "MemurTemp";
+            }
 
-           var path= GetFilePath("Memur");
+            var path = GetFilePath(excelName);
 
             excel = new Microsoft.Office.Interop.Excel.Application
             {
@@ -66,7 +71,7 @@ namespace ExceleApplication
             }
             year = year.Substring(2, 2);
 
-            string name = string.Concat("\\Sources\\İSO-DER-SM-MEMUR (mdm) ", day, ".", month, ".", year, ".xls");
+            string name = string.Concat("\\Sources\\İSO-DER-SM-",excelName.Replace("Temp","").ToUpper()," (mdm) ", day, ".", month, ".", year, ".xls");
             string destinatonPath = string.Concat(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), name);
             workBook.SaveCopyAs(destinatonPath);
             workBook.Close(Missing.Value, Missing.Value, Missing.Value);
@@ -93,13 +98,19 @@ namespace ExceleApplication
             }
 
             var dllPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string path = Path.Combine(dllPath, @"Sources\MemurTemp.xls");
+            string path = Path.Combine(dllPath,string.Concat(@"Sources\", fileName,".xls"));
             var file = Assembly.GetExecutingAssembly().GetManifestResourceStream(currentResource);
 
             return path;
 
         }
 
+      
+        public enum ExcelType
+        {
+            Employee,
+            Official
+        }
     }
 
     public class ExcellData
