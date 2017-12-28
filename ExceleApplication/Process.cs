@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 
 
@@ -14,15 +16,30 @@ namespace ExceleApplication
         private static Microsoft.Office.Interop.Excel.Application excel;
 
 
-        public void ReadExistingExcel(List<ExcellData> data,string currency,string day,string month,string year)
+        public void ReadExistingExcel(List<ExcellData> data, string currency, string day, string month, string year)
         {
-            string path = @"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\MemurTemp.xls";
+            //string path = @"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\MemurTemp.xls";
+
+           // GetFilePath("Memur");
+
             excel = new Microsoft.Office.Interop.Excel.Application
             {
                 Visible = false,
                 DisplayAlerts = false
             };
-            workBook = excel.Workbooks.Open(path, 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
+            var path = @"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\MemurTemp.xls";
+
+           // Microsoft.Office.Interop.Excel.Workbook sheet = excel.Workbooks.Open(path);
+            try
+            {
+                workBook = excel.Workbooks.Open(path, 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
             workSheets = workBook.Worksheets;
             worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workSheets.get_Item("kurummaas");
             Microsoft.Office.Interop.Excel.Range range = worksheet.UsedRange;
@@ -31,8 +48,8 @@ namespace ExceleApplication
 
 
             worksheet.Cells[7, 3] = month;
-            worksheet.Cells[8, 4] =currency;
-            worksheet.Cells[4, 3] = string.Concat(day,"/",month,"/",year);
+            worksheet.Cells[8, 4] = currency;
+            worksheet.Cells[4, 3] = string.Concat(day, "/", month, "/", year);
 
             //worksheet.Cells[5, 4] = totalAmount;
             //worksheet.Cells[6, 4] = data.Count;
@@ -51,10 +68,10 @@ namespace ExceleApplication
                     worksheet.Cells[rowBeginning, 5] = item.Iban;
                 }
             }
-            year = year.Substring(2,2);
+            year = year.Substring(2, 2);
 
-            string name = string.Concat("İSO-DER-SM-MEMUR (mdm) ", day,".", month,".", year, ".xls");
-            string destinatonPath = string.Concat(@"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\",name);
+            string name = string.Concat("İSO-DER-SM-MEMUR (mdm) ", day, ".", month, ".", year, ".xls");
+            string destinatonPath = string.Concat(@"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\", name);
             workBook.SaveCopyAs(destinatonPath);
             workBook.Close(Missing.Value, Missing.Value, Missing.Value);
             worksheet = null;
@@ -62,12 +79,31 @@ namespace ExceleApplication
             excel.Quit();
             GC.WaitForPendingFinalizers();
             GC.Collect();
-       
+        }
+
+        static string GetFilePath(string fileName)
+        {
+
+            var resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            string currentResource = "";
+            foreach (var item in resourceNames)
+            {
+                if (item.Contains(fileName))
+                {
+                    currentResource = item;
+                    break;
+                }
+            }
+
+            var dllPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string path = Path.Combine(dllPath, @"Sources\MemurTemp.xls");
+            var file = Assembly.GetExecutingAssembly().GetManifestResourceStream(currentResource);
+
+            return path;
+
         }
 
     }
-
-
 
     public class ExcellData
     {
