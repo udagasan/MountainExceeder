@@ -16,30 +16,26 @@ namespace ExceleApplication
         private static Microsoft.Office.Interop.Excel.Application excel;
 
 
-        public void ReadExistingExcel(List<ExcellData> data, string currency, string day, string month, string year)
+        public string ReadExistingExcel(List<ExcellData> data, string currency, string day, string month, string year)
         {
-            //string path = @"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\MemurTemp.xls";
 
-           // GetFilePath("Memur");
+           var path= GetFilePath("Memur");
 
             excel = new Microsoft.Office.Interop.Excel.Application
             {
-                Visible = false,
+                Visible = true,
                 DisplayAlerts = false
             };
-            var path = @"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\MemurTemp.xls";
-
-           // Microsoft.Office.Interop.Excel.Workbook sheet = excel.Workbooks.Open(path);
+           
             try
             {
                 workBook = excel.Workbooks.Open(path, 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
-
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
-
+            excel.Visible = false;
             workSheets = workBook.Worksheets;
             worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workSheets.get_Item("kurummaas");
             Microsoft.Office.Interop.Excel.Range range = worksheet.UsedRange;
@@ -70,8 +66,8 @@ namespace ExceleApplication
             }
             year = year.Substring(2, 2);
 
-            string name = string.Concat("İSO-DER-SM-MEMUR (mdm) ", day, ".", month, ".", year, ".xls");
-            string destinatonPath = string.Concat(@"D:\Users\udagasan\Source\Repos\MountainExceeder\ExceleApplication\Sources\", name);
+            string name = string.Concat("\\Sources\\İSO-DER-SM-MEMUR (mdm) ", day, ".", month, ".", year, ".xls");
+            string destinatonPath = string.Concat(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), name);
             workBook.SaveCopyAs(destinatonPath);
             workBook.Close(Missing.Value, Missing.Value, Missing.Value);
             worksheet = null;
@@ -79,6 +75,7 @@ namespace ExceleApplication
             excel.Quit();
             GC.WaitForPendingFinalizers();
             GC.Collect();
+            return destinatonPath;
         }
 
         static string GetFilePath(string fileName)
